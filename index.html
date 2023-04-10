@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Conversion de date grégorienne en date hijri</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/moment-hijri/1.1.0/moment-hijri.min.js"></script>
+</head>
+<body>
+  <h1>Conversion de date grégorienne en date hijri</h1>
+  <form>
+    <label for="date">Entrez une date grégorienne (aaaa-mm-jj) :</label>
+    <input type="date" id="date" name="date">
+    <button type="button" onclick="convertirDate()">Convertir</button>
+  </form>
+  <p>Date hijri correspondante : <span id="resultat"></span></p>
+  
+  <script>
+    function convertirDate() {
+      var dateGregorienne = moment(document.getElementById("date").value);
+      var dateHijri = moment().year(dateGregorienne.year())
+                                 .month(dateGregorienne.month())
+                                 .date(dateGregorienne.date())
+                                 .format("iYYYY/iM/iD");
+      var dateHijriFrancais = traduireDateHijriEnFrancais(dateHijri);
+      document.getElementById("resultat").innerHTML = dateHijriFrancais;
+    }
+
+    function traduireDateHijriEnFrancais(dateHijri) {
+      var dateParts = dateHijri.split("/");
+      var moisFrancais = ["Muharram", "Safar", "Rabi' al-awwal", "Rabi' al-thani", "Jumada al-awwal", "Jumada al-thani", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"];
+      var jourFrancais = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+      var jour = moment(dateHijri, "iYYYY/iM/iD").isoWeekday();
+      var mois = parseInt(dateParts[1], 10) - 1;
+      var jourDuMois = parseInt(dateParts[2], 10);
+      var annee = parseInt(dateParts[0], 10);
+
+      var dateFrancaise = jourFrancais[jour - 1] + " le " + jourDuMois + " " + moisFrancais[mois] + " " + annee;
+      return dateFrancaise;
+    }
+  </script>
+</body>
+</html>
